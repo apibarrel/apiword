@@ -1,0 +1,110 @@
+<%@ page contentType="application/msword" pageEncoding="UTF-8" %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>tool</title>
+    <style type="text/css">
+            .bg {
+            background-color: rgb(84, 127, 177);
+            }
+
+            tr {
+            height: 20px;
+            font-size: 12px;
+            }
+
+            .specialHeight {
+            height: 40px;
+            }
+        </style>
+</head>
+<body>
+<div style="width:800px; margin: 0 auto">
+    <h4 style="text-align: center"> 接口说明文档</h4>
+    <br />
+    <#list table as t>
+        <h5>${t.getInfo().getTitle()}</h4>
+        <table border="1" cellspacing="0" cellpadding="0" width="100%">
+            <tr class="bg">
+                <td>接口描述</td>
+                <td colspan="4">${t.getInfo().getDescription()!""}</td>
+            </tr>
+            <tr>
+                <td>根路径</td>
+                <td colspan="4">${t.getBasePath()}</td>
+            </tr>
+            <tr>
+                <td>版本</td>
+                <td colspan="4">${t.getInfo().getVersion()}</td>
+            </tr>
+            <tr>
+                <td>HOST</td>
+                <td colspan="4">${t.getHost()}</td>
+            </tr>
+
+        </table>
+
+        <h5>公共结构体</h5>
+        <#macro propertyShow properties parentIndex>
+            <#if properties??&&(properties?size>0)>
+            <#list properties?keys as pName >
+            <#assign property=properties[pName]>
+                <tr align="center">
+                    <#if parentIndex == "">
+                        <td>${pName_index + 1}</td>
+                    <#else>
+                        <td>${parentIndex}.${pName_index + 1}</td>
+                    </#if>
+                    <td>${pName}</td>
+                    <#assign type=property.getType()>
+                    <#if type == "Object"||type == "object" >
+                        <td>${property.getType()}</td>
+                    <#elseif type == "array">
+                        <#assign items=property.getItems()>
+                        <#if items.getType() == "ref">
+                            <#assign ref=items.get$ref()?replace("#/definitions/","")>
+                            <td>${property.getType()}[<a href="#${ref}">${ref}</a>]</td>
+                        <#else>
+                            <td>${property.getType()}[${items.getType()}]</td>
+                        </#if>
+                    <#elseif type == "ref">
+                        <#assign ref=property.get$ref()?replace("#/definitions/","")>
+                        <td><a href="#${ref}">${ref}</a></td>
+                    <#else>
+                        <td>${property.getType()}</td>
+                    </#if>
+                    <td>${property.getRequired()?c}</td>
+                    <td>${property.getDescription()!""}</td>
+                    <#if type == "Object"||type == "object" >
+                        <#assign index=pName_index + 1>
+                        <#assign incresIndex=index?string.number>
+                        <@propertyShow properties=property.getProperties() parentIndex=incresIndex />
+                    </#if>
+                </tr>
+            </#list>
+            </#if>
+        </#macro>
+
+        <#assign definitions=t.getDefinitions()>
+        <#if definitions??&&(definitions?size>0)>
+        <#list definitions?keys as name >
+            <#assign definition=definitions[name]>
+            <h6><a name="${name}">${name} ${definition.getDescription()!""}</a></h6>
+            <table border="1" cellspacing="0" cellpadding="0" width="100%">
+            <tr class="bg" align="center">
+                <td width="10%">序号</td>
+                <td width="20%">参数名</td>
+                <td width="20%">数据类型</td>
+                <td width="20%">是否必填</td>
+                <td width="30%">说明</td>
+            </tr>
+            <#assign properties=definition.getProperties()>
+            <@propertyShow properties=properties parentIndex="" />
+            </table>
+        </#list>
+        </#if>
+        
+    </#list>
+</div>
+</body>
+</html>
