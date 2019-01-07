@@ -20,10 +20,10 @@
 </head>
 <body>
 <div style="width:800px; margin: 0 auto">
-    <h4 style="text-align: center"> 接口说明文档</h4>
+    <h1 style="text-align: center"> 接口说明文档</h1>
     <br />
     <#list table as t>
-        <h5>${t.getInfo().getTitle()}</h4>
+        <h2>${t.getInfo().getTitle()}</h2>
         <table border="1" cellspacing="0" cellpadding="0" width="100%">
             <tr class="bg">
                 <td>接口描述</td>
@@ -44,7 +44,7 @@
 
         </table>
 
-        <h5>公共结构体</h5>
+        <h3>公共结构体</h3>
         <#macro propertyShow properties parentIndex>
             <#if properties??&&(properties?size>0)>
             <#list properties?keys as pName >
@@ -89,7 +89,7 @@
         <#if definitions??&&(definitions?size>0)>
         <#list definitions?keys as name >
             <#assign definition=definitions[name]>
-            <h6><a name="${name}">${name} ${definition.getDescription()!""}</a></h6>
+            <h4><a name="${name}">${name} ${definition.getDescription()!""}</a></h4>
             <table border="1" cellspacing="0" cellpadding="0" width="100%">
             <tr class="bg" align="center">
                 <td width="10%">序号</td>
@@ -104,6 +104,133 @@
         </#list>
         </#if>
         
+        <#macro baseParameterShow parameters type desc>
+            <#list parameters as parameter >
+                    <#if parameter.getIn() == type>
+                    <h5>${desc}</h5>
+                    <table border="1" cellspacing="0" cellpadding="0" width="100%">
+                        <tr class="bg" align="center">
+                            <td width="10%">序号</td>
+                            <td width="20%">参数名</td>
+                            <td width="20%">数据类型</td>
+                            <td width="20%">是否必填</td>
+                            <td width="30%">说明</td>
+                        </tr>
+                        <#assign index=1>
+                        <#list parameters as parameter >
+                            <#if parameter.getIn() == type>
+                            <tr align="center">
+                                <td>${index}</td>
+                                <td>${parameter.getName()}</td>
+                                <td>${parameter.getType()}</td>
+                                <td>${parameter.getRequired()?c}</td>
+                                <td>${parameter.getDescription()!""}</td>
+                            </tr>
+                            <#assign index=index+1>
+                            </#if>
+                        </#list>
+                    </table>
+                    <#break>  
+                    </#if>
+                </#list> 
+        </#macro>
+
+        <#macro bodyParameterShow parameters type desc>
+        <#list parameters as parameter >
+                <#if parameter.getIn() == type>
+                <h5>${desc}</h5>
+                <table border="1" cellspacing="0" cellpadding="0" width="100%">
+                    <tr class="bg" align="center">
+                        <td width="10%">序号</td>
+                        <td width="20%">参数名</td>
+                        <td width="20%">数据类型</td>
+                        <td width="20%">是否必填</td>
+                        <td width="30%">说明</td>
+                    </tr>
+                    <#assign index=1>
+                    <#list parameters as parameter >
+                        <#if parameter.getIn() == type>
+                            <#assign schema=parameter.getSchema()>
+                            <#if schema.getProperties()??&&(schema.getProperties()?size>0)>
+                            <tr align="center">
+                                <td>${index}</td>
+                                <td>${parameter.getName()}</td>
+                                <td>object</a></td>
+                                <td>${parameter.getRequired()?c}</td>
+                                <td>${parameter.getDescription()!""}</td>
+                            </tr>
+                            <@propertyShow properties=schema.getProperties() parentIndex=index?string />
+                            </#if>
+                            <#if schema.getReference()??>
+                            <tr align="center">
+                                <td>${index}</td>
+                                <td>${parameter.getName()}</td>
+                                <#assign ref=schema.getReference()?replace("#/definitions/","")>
+                                <td><a href="#${ref}">${ref}</a></td>
+                                <td>${parameter.getRequired()?c}</td>
+                                <td>${parameter.getDescription()!""}</td>
+                            </tr>
+                            </#if>
+                            <#assign index=index+1>
+                        </#if>
+                    </#list>
+                </table>
+                <#break>  
+                </#if>
+            </#list> 
+    </#macro>
+
+        <#macro operationBaseShow operation path method>
+            <#assign description=operation.getDescription()>
+            <#assign parameters=operation.getParameters()>
+            <#assign responses=operation.getResponses()>
+            <h4>${path} ${method}</h4>
+            <h5>接口描述</h5>
+            <h6>${description!""}</h>
+            <@baseParameterShow parameters=parameters type="header" desc="请求头参数" />
+            <@baseParameterShow parameters=parameters type="path" desc="path参数" />
+            <@baseParameterShow parameters=parameters type="query" desc="query参数" />
+            <@baseParameterShow parameters=parameters type="formData" desc="formData参数" />
+            <@bodyParameterShow parameters=parameters type="body" desc="请求消息体"/>
+
+        </#macro>
+        <h3>接口详细描述</h3>
+        <#assign paths=t.getPaths()>
+        <#if paths??&&(paths?size>0)>
+        <#list paths?keys as path >
+            <#assign resource=paths[path]>  
+            <#if resource.getDelete()??>
+                <#assign operation=resource.getDelete()>
+                <@operationBaseShow operation=operation path=path method="delete" />   
+            </#if>
+            <#if resource.getGet()??>
+                <#assign operation=resource.getGet()>
+                <@operationBaseShow operation=operation path=path method="get" />
+            </#if>
+            <#if resource.getHead()??>
+                <#assign operation=resource.getHead()>
+                <@operationBaseShow operation=operation path=path method="head" />
+            </#if>
+            <#if resource.getOptions()??>
+                <#assign operation=resource.getOptions()>
+                <@operationBaseShow operation=operation path=path method="options" />
+            </#if>
+            <#if resource.getPatch()??>
+                <#assign operation=resource.getPatch()>
+                <@operationBaseShow operation=operation path=path method="patch" />
+            </#if>
+            <#if resource.getPost()??>
+                <#assign operation=resource.getPost()>
+                <@operationBaseShow operation=operation path=path method="post" />
+            </#if>
+            <#if resource.getPut()??>
+                <#assign operation=resource.getPut()>
+                <@operationBaseShow operation=operation path=path method="put" />
+            </#if>
+        </#list>   
+        </#if>
+
+
     </#list>
 </div>
 </body>
