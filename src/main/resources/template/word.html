@@ -59,26 +59,36 @@
                     <#assign type=property.getType()>
                     <#if type == "Object"||type == "object" >
                         <td>${property.getType()}</td>
+                        <td>${property.getRequired()?c}</td>
+                        <td>${property.getDescription()!""}</td>
+                        <#assign index=pName_index + 1>
+                        <#assign incresIndex=index?string.number>
+                        <@propertyShow properties=property.getProperties() parentIndex=incresIndex />
                     <#elseif type == "array">
                         <#assign items=property.getItems()>
                         <#if items.getType() == "ref">
                             <#assign ref=items.get$ref()?replace("#/definitions/","")>
                             <td>${property.getType()}[<a href="#${ref}">${ref}</a>]</td>
+                            <td>${property.getRequired()?c}</td>
+                            <td>${property.getDescription()!""}</td>
+                        <#elseif items.getType() == "object">
+                            <#assign index=pName_index + 1>
+                            <#assign incresIndex=index?string.number>
+                            <@propertyShow properties=items..getProperties() parentIndex=incresIndex />
                         <#else>
                             <td>${property.getType()}[${items.getType()}]</td>
+                            <td>${property.getRequired()?c}</td>
+                            <td>${property.getDescription()!""}</td>
                         </#if>
                     <#elseif type == "ref">
                         <#assign ref=property.get$ref()?replace("#/definitions/","")>
                         <td><a href="#${ref}">${ref}</a></td>
+                        <td>${property.getRequired()?c}</td>
+                        <td>${property.getDescription()!""}</td>
                     <#else>
                         <td>${property.getType()}</td>
-                    </#if>
-                    <td>${property.getRequired()?c}</td>
-                    <td>${property.getDescription()!""}</td>
-                    <#if type == "Object"||type == "object" >
-                        <#assign index=pName_index + 1>
-                        <#assign incresIndex=index?string.number>
-                        <@propertyShow properties=property.getProperties() parentIndex=incresIndex />
+                        <td>${property.getRequired()?c}</td>
+                        <td>${property.getDescription()!""}</td>
                     </#if>
                 </tr>
             </#list>
@@ -152,24 +162,56 @@
                         <#if parameter.getIn() == type>
                             <#assign schema=parameter.getSchema()>
                             <#if schema.getProperties()??&&(schema.getProperties()?size>0)>
-                            <tr align="center">
-                                <td>${index}</td>
-                                <td>${parameter.getName()}</td>
-                                <td>object</a></td>
-                                <td>${parameter.getRequired()?c}</td>
-                                <td>${parameter.getDescription()!""}</td>
-                            </tr>
-                            <@propertyShow properties=schema.getProperties() parentIndex=index?string />
+                                <tr align="center">
+                                    <td>${index}</td>
+                                    <td>${parameter.getName()}</td>
+                                    <td>object</a></td>
+                                    <td>${parameter.getRequired()?c}</td>
+                                    <td>${parameter.getDescription()!""}</td>
+                                </tr>
+                                <@propertyShow properties=schema.getProperties() parentIndex=index?string />
+                            </#if>
+                            <#if schema.class.simpleName == "ArrayModel">
+                                <#assign model=schema.getItems()> 
+                                <#assign itemType=model.getType()>
+                                <#if itemType == "object">
+                                    <tr align="center">
+                                        <td>${index}</td>
+                                        <td>${parameter.getName()}</td>
+                                        <td>array[{...}]</td>
+                                        <td>${parameter.getRequired()?c}</td>
+                                        <td>${parameter.getDescription()!""}</td>
+                                    </tr>
+                                    <#assign properties=model.getProperties()>
+                                    <@propertyShow properties=properties parentIndex=index?string />
+                                <#elseif itemType == "ref">
+                                    <#assign ref=model.get$ref()?replace("#/definitions/","")>
+                                    <tr align="center">
+                                        <td>${index}</td>
+                                        <td>${parameter.getName()}</td>
+                                        <td>array[<a href="#${ref}">${ref}</a>]</td>
+                                        <td>${parameter.getRequired()?c}</td>
+                                        <td>${parameter.getDescription()!""}</td>
+                                    </tr>
+                                <#else>
+                                    <tr align="center">
+                                        <td>${index}</td>
+                                        <td>${parameter.getName()}</td>
+                                        <td>array[${type}]</td>
+                                        <td>${parameter.getRequired()?c}</td>
+                                        <td>${parameter.getDescription()!""}</td>
+                                    </tr>
+                                </#if>
                             </#if>
                             <#if schema.getReference()??>
-                            <tr align="center">
-                                <td>${index}</td>
-                                <td>${parameter.getName()}</td>
-                                <#assign ref=schema.getReference()?replace("#/definitions/","")>
-                                <td><a href="#${ref}">${ref}</a></td>
-                                <td>${parameter.getRequired()?c}</td>
-                                <td>${parameter.getDescription()!""}</td>
-                            </tr>
+                                <tr align="center">
+                                    <td>${index}</td>
+                                    <td>${parameter.getName()}</td>
+                                    <#assign ref=schema.getReference()?replace("#/definitions/","")>
+                                    <td><a href="#${ref}">${ref}</a></td>
+                                    <td>${parameter.getRequired()?c}</td>
+                                    <td>${parameter.getDescription()!""}</td>
+                                </tr>
                             </#if>
                             <#assign index=index+1>
                         </#if>
@@ -185,8 +227,8 @@
             <#assign parameters=operation.getParameters()>
             <#assign responses=operation.getResponses()>
             <h4>${path} ${method}</h4>
-            <h5>接口描述</h5>
-            <h6>${description!""}</h>
+            <h5>  接口描述</h5>
+            <h6>    ${description!""}</h>
             <@baseParameterShow parameters=parameters type="header" desc="请求头参数" />
             <@baseParameterShow parameters=parameters type="path" desc="path参数" />
             <@baseParameterShow parameters=parameters type="query" desc="query参数" />
