@@ -8,8 +8,8 @@ swagger生成word
 
 ### 使用说明：
 
-1.在ApiController中读取了D盘的一个yaml文件，可以按照实际的路径配置
-2.在ApiController类中写了一个word文件，可以按照实际的路径配置
+- 在ApiController中读取了D盘的一个yaml文件，可以按照实际的路径配置
+- 在ApiController类中写了一个word文件，可以按照实际的路径配置
 
 ### 项目规划
 - [x] 支持swagger definitions
