@@ -37,7 +37,7 @@ public class ApiController {
         Map<String, List<Swagger>> map = new HashMap<>();
         List<Swagger> list = new ArrayList<>();
         list.add(swagger);
-        map.put("table",list);
+        map.put("swaggers",list);
         Configuration configuration = new Configuration(Configuration.getVersion());
         configuration.setClassForTemplateLoading(this.getClass(),"/template");
         configuration.setDefaultEncoding("utf-8");
