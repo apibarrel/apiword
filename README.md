@@ -17,7 +17,9 @@ swagger生成word
 - [x] 支持swagger query 参数
 - [x] 支持swagger path 参数
 - [x] 支持swagger 请求体
+- [x] 支持swagger 响应头
 - [x] 支持swagger 响应体
+- [x] 支持swagger 生成文档带章节
 - [ ] 支持soap wsdl和xsd 生成word
 - [ ] 支持上传接口定义文件接口
 - [ ] 支持下载接口word接口
