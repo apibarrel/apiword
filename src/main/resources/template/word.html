@@ -23,9 +23,9 @@
     <h1 style="text-align: center"> 接口说明文档</h1>
     <br />
     <#list swaggers as t>
-        <h2>${t.getInfo().getTitle()}</h2>
+        <h1>${t.getInfo().getTitle()}</h1>
         <br/>
-        <h3>1 接口基本信息</h3>
+        <h2>1 接口基本信息</h2>
         <table border="1" cellspacing="0" cellpadding="0" width="100%">
             <tr>
                 <td>接口描述</td>
@@ -33,15 +33,15 @@
             </tr>
             <tr>
                 <td>根路径</td>
-                <td colspan="4">${t.getBasePath()}</td>
+                <td colspan="4">${t.getBasePath()!""}</td>
             </tr>
             <tr>
                 <td>版本</td>
-                <td colspan="4">${t.getInfo().getVersion()}</td>
+                <td colspan="4">${t.getInfo().getVersion()!""}</td>
             </tr>
             <tr>
                 <td>HOST</td>
-                <td colspan="4">${t.getHost()}</td>
+                <td colspan="4">${t.getHost()}!""</td>
             </tr>
 
         </table>
@@ -218,10 +218,10 @@
 
         <#macro operationBaseShow operation parentIndex path pathIndex method methodIndex>
             <br/>
-            <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex} http方法&nbsp;&nbsp;${method}</font></h5>
+            <h4><font size="5">${parentIndex}.${pathIndex}.${methodIndex} http方法&nbsp;&nbsp;${method}</font></h4>
             <br/>
-            <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.1 接口描述</font></h5>
-            <h6><font size="5">&nbsp;&nbsp;${operation.getDescription()!""}</font></h6>
+            <h4><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.1 接口描述</font></h4>
+            <h5><font size="5">&nbsp;&nbsp;${operation.getDescription()!""}</font></h5>
             <br/>
             <#assign jIndex=1>
             <#if operation.getParameters()??&&(operation.getParameters()?size>0)>
@@ -230,7 +230,7 @@
                 <#list parameters as parameter >
                     <#if parameter.getIn() == "header">
                     <#assign jIndex=jIndex+1> 
-                    <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} 请求头参数</font></h5>
+                    <h4><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} 请求头参数</font></h4>
                     <br/>
                     <table border="1" cellspacing="0" cellpadding="0" width="100%">
                         <tr class="bg" align="center">
@@ -262,7 +262,7 @@
                 <#list parameters as parameter >
                     <#if parameter.getIn() == "path">
                     <#assign jIndex=jIndex+1> 
-                    <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} path参数</font></h5>
+                    <h4><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} path参数</font></h4>
                     <br/>
                     <table border="1" cellspacing="0" cellpadding="0" width="100%">
                         <tr class="bg" align="center">
@@ -294,7 +294,7 @@
                 <#list parameters as parameter >
                     <#if parameter.getIn() == "query">
                     <#assign jIndex=jIndex+1> 
-                    <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} query参数</font></h5>
+                    <h4><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} query参数</font></h4>
                     <br/>
                     <table border="1" cellspacing="0" cellpadding="0" width="100%">
                         <tr class="bg" align="center">
@@ -325,7 +325,7 @@
                 <#list parameters as parameter >
                     <#if parameter.getIn() == "formData">
                     <#assign jIndex=jIndex+1> 
-                    <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} formData参数</font></h5>
+                    <h4><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} formData参数</font></h4>
                     <br/>
                     <table border="1" cellspacing="0" cellpadding="0" width="100%">
                         <tr class="bg" align="center">
@@ -356,8 +356,8 @@
                 <#list parameters as parameter >
                     <#if parameter.getIn() == "body">
                         <#assign jIndex=jIndex+1> 
-                        <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} 请求消息体  </font></h6> 
-                        <h6> <font size="4">  消息体参数列表的第一行代表的是消息体的结构类型，比如ojbect代表的是{}结构，array代表的是[]接口 </font></h6>
+                        <h4><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} 请求消息体  </font></h4> 
+                        <h5> <font size="4">  消息体参数列表的第一行代表的是消息体的结构类型，比如ojbect代表的是{}结构，array代表的是[]接口 </font></h5>
                         <table border="1" cellspacing="0" cellpadding="0" width="100%">
                             <tr class="bg" align="center">
                                 <td width="10%">序号</td>
@@ -388,13 +388,13 @@
                     <#assign jIndex=jIndex+1> 
                     <#assign response=responses[statusCode]>
                     <#assign index=1>
-                    <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} ${statusCode} 响应消息  ${response.getDescription()!""}</font></h5>
+                    <h4><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex} ${statusCode} 响应消息  ${response.getDescription()!""}</font></h4>
                     <br/>
                     <#assign jiedianIndex=0>
                     <#if response.getHeaders()??&&(response.getHeaders()?size>0)>
                         <#assign jiedianIndex=jiedianIndex+1> 
                         <#assign headers=response.getHeaders()>
-                        <h6><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex}.${jiedianIndex} 响应头参数</font></h6>
+                        <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex}.${jiedianIndex} 响应头参数</font></h5>
                         <br/>
                         <table border="1" cellspacing="0" cellpadding="0" width="100%">
                             <tr class="bg" align="center">
@@ -419,7 +419,7 @@
                     <#if response.getResponseSchema()??>
                         <#assign jiedianIndex=jiedianIndex+1> 
                         <#assign model=response.getResponseSchema()> 
-                        <h6><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex}.${jiedianIndex} 响应消息体  消息体参数列表的第一行代表的是消息体的结构类型，比如ojbect代表的是{}结构，array代表的是[]接口</font></h6>
+                        <h5><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex}.${jiedianIndex} 响应消息体  消息体参数列表的第一行代表的是消息体的结构类型，比如ojbect代表的是{}结构，array代表的是[]接口</font></h5>
                         <table border="1" cellspacing="0" cellpadding="0" width="100%">
                             <tr class="bg" align="center">
                                 <td width="10%">序号</td>
@@ -436,14 +436,14 @@
             </#if>
         </#macro>
 
-        <h3>2 公共结构体</h3>
+        <h2>2 公共结构体</h2>
         <br/>
         <#if t.getDefinitions()??&&(t.getDefinitions()?size>0)>
             <#assign definitions=t.getDefinitions()>
             <#assign index=1>
             <#list definitions?keys as name >
                 <#assign definition=definitions[name]>
-                <h4><a name="${name}"><font size="5">2.${index}  ${name} ${definition.getDescription()!""}</font></a></h4>
+                <h3><a name="${name}"><font size="5">2.${index}  ${name} ${definition.getDescription()!""}</font></a></h3>
                 <table border="1" cellspacing="0" cellpadding="0" width="100%">
                     <tr class="bg" align="center">
                         <td width="10%">序号</td>
@@ -473,12 +473,12 @@
         </#if>
         <br/>
 
-        <h3>3.接口详细描述</h3>
+        <h2>3.接口详细描述</h2>
         <br/>
         <#if t.getPaths()??&&(t.getPaths()?size>0)>
             <#assign paths=t.getPaths()>
             <#list paths?keys as path >
-                <h4><font size="5">3.${path_index+1} ${path}</font></h4>
+                <h3><font size="5">3.${path_index+1} ${path}</font></h3>
                 <br/>
                 <#assign methodIndex=1>
                 <#assign resource=paths[path]>  
