@@ -418,10 +418,10 @@
                         <br/>
                     </#if>
                     <#if response.getResponseSchema()??>
-                        <#assign jiedianIndex=jiedianIndex+1>
-<#assign model=response.getResponseSchema()>
-<h6><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex}.${jiedianIndex} 响应消息体
-    消息体参数列表的第一行代表的是消息体的结构类型，比如ojbect代表的是{}结构，array代表的是[]接口</font></h6>
+						<#assign jiedianIndex=jiedianIndex+1>
+						<#assign model=response.getResponseSchema()>
+						<h6><font size="5">${parentIndex}.${pathIndex}.${methodIndex}.${jIndex}.${jiedianIndex} 响应消息体
+    							消息体参数列表的第一行代表的是消息体的结构类型，比如ojbect代表的是{}结构，array代表的是[]接口</font></h6>
                         <table border="1" cellspacing="0" cellpadding="0" width="100%">
                             <tr class="bg" align="center">
                                 <td width="10%">序号</td>

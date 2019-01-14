@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apibarrel.apiword.mapper.ApiBaseMapper">
+    <insert id = "insert" parameterType="com.apibarrel.apiword.model.ApiBase">
+        INSERT INTO T_API_BASE(ID,NAME,VERSION,NAMESPACE,PROTOCOL,CREATETIME,CREATOR,TAG) VALUES(#{id},#{name},#{version},#{namespace},#{protocol},#{createTime},#{creator},#{tag});
+    </insert>
+
+    <update id="update" parameterType="com.apibarrel.apiword.model.ApiBase">
+        UPDATE T_API_BASE SET NAME=#{name} , VERSION=#{version} , TAG = #{tag} WHERE ID=#{id}
+    </update>
+
+    <select id="query" parameterType="String" resultType="com.apibarrel.apiword.model.ApiBase">
+        SELECT * FROM T_API_BASE WHERE ID=#{id}
+    </select>
+
+    <delete id="delete" parameterType="String">
+        DELETE FROM T_API_BASE WHERE ID=#{id}
+    </delete>
+
+</mapper>

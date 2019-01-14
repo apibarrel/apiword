@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.apibarrel.apiword.mapper.ApiAssetMapper">
+
+    <insert id = "insert" parameterType="com.apibarrel.apiword.model.ApiAsset">
+        INSERT INTO T_API_ASSET(ID,TYPE,NAME,CONTENT,APIID) VALUES(#{id},#{type},#{name},#{content},#{apiId});
+    </insert>
+
+    <update id="update" parameterType="com.apibarrel.apiword.model.ApiAsset">
+        UPDATE T_API_ASSET SET NAME=#{name} , CONTENT=#{content} , TYPE = #{type} WHERE ID=#{id}
+    </update>
+
+    <select id="query" resultType="com.apibarrel.apiword.model.ApiAsset">
+        SELECT * FROM T_API_ASSET WHERE ID=#{id}
+    </select>
+
+    <select id="queryByApiId" resultType="com.apibarrel.apiword.model.ApiAsset">
+        SELECT * FROM T_API_ASSET WHERE APIID=#{id}
+    </select>
+
+    <delete id="delete" parameterType="string">
+        DELETE FROM USER WHERE ID=#{id}
+    </delete>
+
+</mapper>
